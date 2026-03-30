@@ -1,0 +1,75 @@
+<section class="bundle-section" id="bundle-{{ section.id }}">
+  <div class="bundle-trigger">
+    <img src="{{ section.settings.image | image_url: width: 1200 }}" alt="">
+    <div class="bundle-content">
+      <h2>{{ section.settings.title }}</h2>
+      <p>{{ section.settings.text }}</p>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="bundle-modal" hidden>
+    <div class="bundle-modal__overlay"></div>
+
+    <div class="bundle-modal__content">
+      <button class="bundle-modal__close">×</button>
+
+      <div class="bundle-products">
+        {% for product in section.settings.products %}
+          {% assign product = all_products[product] %}
+
+          {% if product %}
+            <div class="bundle-product" data-variant="{{ product.variants.first.id }}">
+              <img src="{{ product.featured_image | image_url: width: 300 }}" />
+
+              <div>
+                <h4>{{ product.title }}</h4>
+                <p>{{ product.price | money }}</p>
+
+                <button class="add-to-cart">
+                  Add to bag
+                </button>
+              </div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+
+      <button class="add-all">Add selected to cart</button>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Bundle Modal",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Main image"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Text"
+    },
+    {
+      "type": "product_list",
+      "id": "products",
+      "label": "Products",
+      "limit": 6
+    }
+  ],
+  "presets": [
+    {
+      "name": "Bundle Modal"
+    }
+  ]
+}
+{% endschema %}
