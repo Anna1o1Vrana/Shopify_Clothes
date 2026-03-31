@@ -84,7 +84,12 @@
         "image": "shopify://shop_images/Gemini_Generated_Image_z3y969z3y969z3y9.png",
         "title": "Shop your new spring OUTFITS",
         "text": "A “smart casual” dress code is one of the trickiest to dress for. But what does that even mean? Often suggested for informal work socials or networking events, smart casual style revolves around building an outfit that’s relaxed yet still professional. Sound like a sartorial challenge? It certainly is—but with the right tips and tricks, you can easily nail it.",
-        "products": []
+        "products": [
+          "classic-slim-fit-trousers",
+          "essential-cognac-leather-tote",
+          "luxurious-cashmere-blend-crewneck-sweater",
+          "signature-skinny-leather-belt"
+        ]
       }
     }
   },
