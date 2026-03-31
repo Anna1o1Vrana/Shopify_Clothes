@@ -1,34 +1,33 @@
-<section class="bundle-section" id="bundle-{{ section.id }}">
-  <div class="bundle-trigger">
-    <img src="{{ section.settings.image | image_url: width: 1200 }}" alt="">
-    <div class="bundle-content">
+{{ 'product-bundle-modal.css' | asset_url | stylesheet_tag }}
+{{ 'product-bundle-modal.js' | asset_url | script_tag }}
+
+<section class="product-bundle-modal__section" id="bundle-{{ section.id }}" data-bundle-section>
+  <div class="product-bundle-modal__container" data-modal-trigger>
+    <img src="{{ section.settings.image | image_url: width: 1200 }}" alt="" class="product-bundle-modal__img">
+    <div class="product-bundle-modal__content">
       <h2>{{ section.settings.title }}</h2>
       <p>{{ section.settings.text }}</p>
     </div>
   </div>
 
   <!-- Modal -->
-  <div class="bundle-modal" hidden>
-    <div class="bundle-modal__overlay"></div>
+  <div class="product-bundle-modal__modal" data-bundle-modal hidden>
+    <div class="product-bundle-modal__modal-content">
+      <button class="product-bundle-modal__close-btn" data-close-modal>×</button>
 
-    <div class="bundle-modal__content">
-      <button class="bundle-modal__close">×</button>
-
-      <div class="bundle-products">
+      <div class="product-bundle-modal__products">
         {% for product in section.settings.products %}
           {% assign product = all_products[product] %}
 
           {% if product %}
             <div class="bundle-product" data-variant="{{ product.variants.first.id }}">
-              <img src="{{ product.featured_image | image_url: width: 300 }}" />
+              <img src="{{ product.featured_image | image_url: width: 300 }}">
 
               <div>
                 <h4>{{ product.title }}</h4>
                 <p>{{ product.price | money }}</p>
 
-                <button class="add-to-cart">
-                  Add to bag
-                </button>
+                <button class="add-to-cart">Add to bag</button>
               </div>
             </div>
           {% endif %}
