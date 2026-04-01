@@ -2,11 +2,17 @@
 {{ 'product-bundle-modal.js' | asset_url | script_tag }}
 
 <section class="product-bundle-modal__section" id="bundle-{{ section.id }}" data-bundle-section>
-  <div class="product-bundle-modal__container" data-modal-trigger>
-    <img src="{{ section.settings.image | image_url: width: 1200 }}" alt="" class="product-bundle-modal__img">
+  <div class="product-bundle-modal__container page-width page-width-desktop" data-modal-trigger>
+    <div class="product-bundle-modal__image-container" data-variant="{{ product.variants.first.id }}">
+        <img 
+            src="{{ section.settings.image | image_url: width: 1200 }}" 
+            alt="{{ section.settings.image_alt | escape }}" 
+            class="product-bundle-modal__img" 
+            loading="lazy">
+    </div>
     <div class="product-bundle-modal__content">
-      <h2>{{ section.settings.title }}</h2>
-      <p>{{ section.settings.text }}</p>
+        <h2 class="content-title">{{ section.settings.title }}</h2>
+        <p class="content-text">{{ section.settings.text }}</p>
     </div>
   </div>
 
@@ -15,26 +21,86 @@
     <div class="product-bundle-modal__modal-content">
       <button class="product-bundle-modal__close-btn" data-close-modal>×</button>
 
-      <div class="product-bundle-modal__products">
+    <div class="product-bundle-modal__image-container" data-variant="{{ product.variants.first.id }}">
+        <img 
+            src="{{ section.settings.image | image_url: width: 1200 }}" 
+            alt="{{ section.settings.image_alt | escape }}" 
+            class="product-bundle-modal__img" 
+            loading="lazy">
+    </div>
+
+      <ul class="product-bundle-modal__products">
         {% for product in section.settings.products %}
           {% assign product = all_products[product] %}
 
           {% if product %}
-            <div class="bundle-product" data-variant="{{ product.variants.first.id }}">
-              <img src="{{ product.featured_image | image_url: width: 300 }}">
+  {% assign current_variant = product.selected_or_first_available_variant %}
 
-              <div>
-                <h4>{{ product.title }}</h4>
-                <p>{{ product.price | money }}</p>
+  <li 
+    class="product-card" 
+    data-product 
+    tabindex="0"
+    data-variant-id="{{ current_variant.id }}"
+  >
 
-                <button class="add-to-cart">Add to bag</button>
-              </div>
-            </div>
-          {% endif %}
+    <img 
+      src="{{ current_variant.featured_image | default: product.featured_image | image_url: width: 150 }}" 
+      alt="{{ product.title }}" 
+      class="product-card__image"
+      data-image
+    >
+
+    <h4 class="product-card__title" data-title>
+      {{ product.title | upcase }}
+    </h4>
+
+    <p class="product-card__desc"> Lorem Ipsum is simply dummy text of the printing </p>
+
+    <p class="product-card__price">
+      <span class="price-current" data-price>
+        {{ current_variant.price | money_without_currency | remove: ',00' }} {{ localization.country.currency.iso_code }}
+      </span>
+
+      </br>
+
+      <span class="product-card__old-price" data-compare>
+        {% if current_variant.compare_at_price and current_variant.compare_at_price > current_variant.price %}
+          {{ current_variant.compare_at_price | money_without_currency | remove: ',00' }} {{ localization.country.currency.iso_code }}
+        {% endif %}
+      </span>
+    </p>
+
+<div class="product-card__buttons-container">
+    {% unless product.has_only_default_variant %}
+      <select class="product-card__variant-select" data-variants>
+        {% for variant in product.variants %}
+          <option 
+            value="{{ variant.id }}"
+            data-price="{{ variant.price }}"
+            data-compare="{{ variant.compare_at_price }}"
+            data-image="{{ variant.featured_image | default: product.featured_image | image_url: width: 150 }}"
+            data-title="{{ variant.title }}"
+            {% if variant.id == current_variant.id %}selected{% endif %}
+          >
+            {{ variant.title }}
+          </option>
+        {% endfor %}
+      </select>
+    {% endunless %}
+
+    <button class="product-card__add-to-bag">
+    
+      Add to bag
+    </button>
+    </div>
+
+  </li>
+{% endif %}
+
+
         {% endfor %}
       </div>
 
-      <button class="add-all">Add selected to cart</button>
     </div>
   </div>
 </section>
@@ -47,6 +113,12 @@
       "type": "image_picker",
       "id": "image",
       "label": "Main image"
+    },
+    {
+      "type": "text",
+      "id": "image_alt",
+      "label": "Image alt text",
+      "default": "Bundle image"
     },
     {
       "type": "text",
