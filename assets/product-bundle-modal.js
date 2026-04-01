@@ -77,4 +77,48 @@ document.addEventListener("DOMContentLoaded", () => {
   //     console.error(err);
   //   }
   // });
+
+
+  // select product
+  section.querySelectorAll('.bundle-product').forEach(item => {
+    item.addEventListener('click', () => {
+      const variantId = item.dataset.variant;
+
+      if (selected.has(variantId)) {
+        selected.delete(variantId);
+        item.classList.remove('active');
+      } else {
+        selected.add(variantId);
+        item.classList.add('active');
+      }
+    });
+  });
+
+  // add all to cart
+  section.querySelector('.add-all').addEventListener('click', async () => {
+    if (!selected.size) return;
+
+    const items = [...selected].map(id => ({
+      id,
+      quantity: 1
+    }));
+
+    try {
+        const res = await fetch('/cart/add.js', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ items })
+        });
+  
+        const data = await res.json();
+        // optional: trigger cart drawer refresh
+      document.dispatchEvent(new CustomEvent('cart:updated', { detail: data }));
+
+      closeModal();
+    } catch (err) {
+      console.error(err);
+    }
+  });
 });

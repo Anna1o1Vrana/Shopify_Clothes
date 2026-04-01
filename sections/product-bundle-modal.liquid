@@ -1,9 +1,11 @@
 {{ 'product-bundle-modal.css' | asset_url | stylesheet_tag }}
 {{ 'product-bundle-modal.js' | asset_url | script_tag }}
 
-<section class="product-bundle-modal__section" id="bundle-{{ section.id }}" data-bundle-section>
+<section class="product-bundle-modal__section section" id="bundle-{{ section.id }}" data-bundle-section>
   <div class="product-bundle-modal__container" data-modal-trigger>
-    <img src="{{ section.settings.image | image_url: width: 1200 }}" alt="" class="product-bundle-modal__img">
+    <div class="product-bundle-modal__image-container">
+        <img src="{{ section.settings.image | image_url: width: 1200 }}" alt="" class="product-bundle-modal__img">
+    </div>
     <div class="product-bundle-modal__content">
       <h2>{{ section.settings.title }}</h2>
       <p>{{ section.settings.text }}</p>
@@ -12,29 +14,30 @@
 
   <!-- Modal -->
   <div class="product-bundle-modal__modal" data-bundle-modal hidden>
-    <div class="product-bundle-modal__modal-content">
-      <button class="product-bundle-modal__close-btn" data-close-modal>×</button>
-
-      <div class="product-bundle-modal__products">
+    <div class="modal__content">
+      <button class="modal__close-btn" data-close-modal>×</button>
+        <div class="product-bundle-modal__image-container">
+            <img src="{{ section.settings.image | image_url: width: 1200 }}" alt="" class="product-bundle-modal__img">
+        </div>
+      <div class="modal__products">
         {% for product in section.settings.products %}
           {% assign product = all_products[product] %}
 
           {% if product %}
-            <div class="bundle-product" data-variant="{{ product.variants.first.id }}">
-              <img src="{{ product.featured_image | image_url: width: 300 }}">
-
-              <div>
-                <h4>{{ product.title }}</h4>
-                <p>{{ product.price | money }}</p>
+            <div class="modal__product-card" data-variant="{{ product.variants.first.id }}">
+                <div class="modal__product-card-image">
+                    <img src="{{ product.featured_image | image_url: width: 150 }}">
+                </div>
+              
+                <h4 class="modal__product-card-title">{{ product.title }}</h4>
+                <p class="modal__product-card-price">{{ product.price | money }}</p>
 
                 <button class="add-to-cart">Add to bag</button>
-              </div>
             </div>
           {% endif %}
         {% endfor %}
       </div>
 
-      <button class="add-all">Add selected to cart</button>
     </div>
   </div>
 </section>
